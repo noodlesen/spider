@@ -1,0 +1,180 @@
+import warnings
+from flask.exthook import ExtDeprecationWarning
+
+warnings.simplefilter('ignore', ExtDeprecationWarning)
+
+
+from flask import Flask, request, session, render_template, url_for, make_response
+from flask_debugtoolbar import DebugToolbarExtension
+from flask_bootstrap import Bootstrap
+from flask_login import LoginManager, login_required, login_user, logout_user, current_user
+from flask_wtf.csrf import CsrfProtect
+import json
+from datetime import datetime, timedelta
+
+
+from .cache import cache
+from .db import db
+from .config import DEBUG, SECRET_KEY, DBURI, MAINTENANCE, PROJECT_NAME, MAIL_SERVER, MAIL_PORT, MAIL_USE_TLS, MAIL_USE_SSL, MAIL_USERNAME, MAIL_PASSWORD, ALLOW_ROBOTS
+from .logger import Log
+
+from .models import Bid, Ask, UserQuery, DestinationStats
+
+from .requester import random_request
+
+
+app = Flask(__name__)
+
+
+
+app.debug = DEBUG
+
+app.config['PROJECT_NAME']=PROJECT_NAME
+app.config['SECRET_KEY'] = SECRET_KEY
+app.config['SQLALCHEMY_DATABASE_URI'] = DBURI
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
+app.config['SQLALCHEMY_POOL_RECYCLE'] = 60
+app.config['SQLALCHEMY_POOL_TIMEOUT'] = 20
+app.config['BOOTSTRAP_SERVE_LOCAL']=True
+app.config['CACHE_TYPE']='simple'
+app.config['EMAIL_HOST']= MAIL_SERVER
+app.config['EMAIL_PORT']= MAIL_PORT
+app.config['EMAIL_HOST_USER']= MAIL_USERNAME
+app.config['EMAIL_HOST_PASSWORD']= MAIL_PASSWORD
+app.config['EMAIL_USE_SSL']= MAIL_USE_SSL
+app.config['EMAIL_USE_TLS']= MAIL_USE_TLS
+
+app.config['WTF_CSRF_TIME_LIMIT'] = 36000
+
+cache.init_app(app)
+
+toolbar = DebugToolbarExtension(app)
+
+csrf = CsrfProtect(app)
+
+db.init_app(app)
+
+bootstrap = Bootstrap(app)
+
+
+lm = LoginManager(app)
+lm.login_view = 'social.login'
+
+@app.context_processor
+def set_global_mode():
+    return {'debug_mode': DEBUG}
+
+
+@lm.user_loader
+def load_user(id):
+    if id:
+        return User.query.get(id)
+    else:
+        return None
+
+@app.before_request
+def make_session_permanent():
+    session.permanent = True
+
+
+@app.before_request
+def check_for_maintenance():
+    if MAINTENANCE and request.path != url_for('maintenance') and not 'static' in request.path:
+        return redirect(url_for('maintenance'))
+
+@app.route('/maintenance')
+def maintenance():
+    if MAINTENANCE:
+        return render_template('maintenance.html')
+    else:
+        return redirect(url_for('root'))
+
+@app.route('/robots.txt')
+def robots():
+    if not ALLOW_ROBOTS:
+        return ("User-agent: *\nDisallow: /")
+    else:
+        return ("User-agent: *\nDisallow:")
+
+
+
+@app.route('/')
+def root():
+    Log.register(action='route:root')
+    return render_template('main.html')
+
+@app.route('/bid-feed', methods = ['POST'])
+def bid_feed():
+    res = {'success': True, 'bids': []}
+
+    #move to toolbox
+    fields = ['destination', 'departure_date', 'return_date', 'price', 'rating', 'dest_name', 'stops']
+    bids = list(db.engine.execute(""" SELECT %s FROM bid WHERE to_expose=1 LIMIT 50""" % ','.join(fields)))
+    for b in bids:
+        nb = {}
+        i=0
+        for f in fields:
+            
+            if isinstance(b[i], datetime):
+                bf = datetime.strftime(b[i], '%b %d')
+                if f=='departure_date':
+                    dd_url = datetime.strftime(b[i], '%Y-%m-%d')
+                if f=='return_date':
+                    rd_url = datetime.strftime(b[i], '%Y-%m-%d')
+            else:
+                bf = b[i]
+
+            if f=='stops':
+                if b[i]==0:
+                    bf="ПРЯМОЙ"
+                elif b[i]==1:
+                    bf="1 СТОП"
+                elif b[i]==2:
+                    bf="2 СТОПА"
+
+            nb[f]=bf
+            i+=1
+        tpurl="http://aviasales.ru/?origin_iata=MOW"
+        nb['href']=tpurl+"&destination_iata=%s&depart_date=%s&return_date=%s" % (nb['destination'],dd_url, rd_url)
+        res['bids'].append(nb)
+
+    return json.dumps(res)
+
+
+@app.route('/pulse', methods = ['POST'])
+def pulse():
+    res={}
+    print ('ACCEPTED '+str(datetime.utcnow())) 
+    if (datetime.utcnow()-DestinationStats.last_request_time()).seconds<10:
+        res['success']=False
+        print ("Too early -skip")
+    else:
+        destinations = [p for p in db.engine.execute("""SELECT name, code, country, number FROM destination""")]
+        random_request(destinations)
+    return json.dumps({'success':True})
+
+
+
+
+@app.template_filter('nl2br')
+def nl2br(value):
+    text = ""
+    if value:
+        for line in value.split('\n'):
+            text += Markup.escape(line) + Markup('<br />')
+    return text
+
+@app.errorhandler(404)
+def page_not_found(e):
+    Log.register(action='route:404', data=request.url)
+    return render_template('404.html'), 404
+
+@app.errorhandler(413)
+def error413(e):
+    return "Your error page for 413 status code", 413
+
+
+
+
+

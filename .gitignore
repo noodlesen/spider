@@ -1,0 +1,5 @@
+spider/config.py
+__pycache__
+spider/__pycache__
+*.pyc
+logs/*.log

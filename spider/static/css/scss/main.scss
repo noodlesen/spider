@@ -1,0 +1,128 @@
+@import "config";
+
+h1 {
+    text-align: center;
+}
+#bid-feed{
+    background-color: $gray1;
+    padding: 1em;
+    border-radius: 6px;
+    min-height: 10em;
+}
+
+.bid__row{
+    //color:$green;
+    display: block;
+    font-size: 120%;
+    padding: 5px .5em;
+    border-color: $gray2;
+    //border-width: 1px;
+    border-width: 0 0 1px 0;
+    border-style: solid; 
+    margin-bottom: 10px;
+    width:100%;
+}
+
+.bid__row:nth-child(odd){
+    color: $orange;
+}
+
+.bid__row:nth-child(even){
+    color: $green;
+} 
+
+.bid-part{
+    display: inline-block;
+    text-align: center;
+}
+
+.bid__destination{
+    font-weight: 600;
+    width: 7%;
+}
+
+.bid__dest-name{
+    width: 20%;
+}
+
+.bid__price{
+    font-weight: 600;
+    width: 15%;
+}
+
+.bid__dates{
+    min-width: 25%;
+}
+
+.rsign{
+    font-size: 80%;
+    font-weight: lighter;
+    color:$gray2;
+}
+
+
+// TRANSITIONS
+
+/* always present */
+.expand-transition {
+  transition: all .3s ease;
+}
+/* .expand-enter defines the starting state for entering */
+/* .expand-leave defines the ending state for leaving */
+.expand-enter, .expand-leave {
+  opacity: 0;
+}
+
+
+
+
+.flip {
+  transition: transform 1s;
+}
+
+
+.bounce-transition {
+  display: inline-block; /* otherwise scale animation won't work */
+}
+.bounce-enter {
+  animation: bounce-in .5s;
+}
+.bounce-leave {
+  animation: bounce-out .5s;
+}
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes bounce-out {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+
+
+.staggered-transition {
+    transition: all 2s ease;
+    //overflow: hidden;
+    margin: 0;
+    background-color: $gray1;
+
+}
+.staggered-enter, .staggered-leave {
+    background-color: $green;
+    opacity: 0;
+    height: 0;
+}
