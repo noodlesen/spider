@@ -52,10 +52,10 @@ var bidFeed = new Vue({
                         var ri = Math.floor(Math.random() * self.allBids.length);
                         self.shownBids.push(self.allBids.splice(ri,1)[0]);
                         self.sortBids();
+                        console.log('>>');
                         getResults('/pulse', 'json', {}, function(res){});
                     } else {
-                        // request more
-                        // reset
+                        location.reload();
                     }
                     setTimeout(cycle, i*100+Math.floor((Math.sin(i+sc)+1)*750));
                 },1500);

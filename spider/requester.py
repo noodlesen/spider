@@ -92,7 +92,7 @@ def random_request( destinations):
                 now = datetime.now()
                 td = bid.departure_date - now
                 days_to = td.days
-                rating = int(bid.distance/bid.price*1000*k/(bid.stops+1)+number/100)-days_to-2**i if i<=10 else 0
+                rating = int(bid.distance/bid.price*1000*k/(bid.stops+1)+number/10)-days_to-2**i if i<=10 else 0
                 lim_low = int(bid.distance/400)
                 lim_high = int(bid.distance/200)
                 dur = (bid.return_date - bid.departure_date).days

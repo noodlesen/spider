@@ -110,7 +110,7 @@ def bid_feed():
 
     #move to toolbox
     fields = ['destination', 'departure_date', 'return_date', 'price', 'rating', 'dest_name', 'stops']
-    bids = list(db.engine.execute(""" SELECT %s FROM bid WHERE to_expose=1 LIMIT 50""" % ','.join(fields)))
+    bids = list(db.engine.execute(""" SELECT %s FROM bid WHERE to_expose=1 ORDER BY rating DESC LIMIT 50""" % ','.join(fields)))
     for b in bids:
         nb = {}
         i=0

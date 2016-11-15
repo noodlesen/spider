@@ -12,7 +12,7 @@ manager = Manager(app)
 
 
 @manager.command
-def test():
+def preload():
     #origins = [p[1] for p in db.engine.execute("""SELECT name, code, country FROM prefered_airports WHERE origin=1""")]
     destinations = [p for p in db.engine.execute("""SELECT name, code, country, number FROM destination""")]
     #destinations = ['SIN']
