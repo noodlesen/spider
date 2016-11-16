@@ -150,7 +150,7 @@ def pulse():
         res['success']=False
         print ("Too early -skip")
     else:
-        destinations = [p for p in db.engine.execute("""SELECT name, code, country, number FROM destination""")]
+        destinations = [p for p in db.engine.execute("""SELECT name, code, country, score FROM destination""")]
         random_request(destinations)
     return json.dumps({'success':True})
 

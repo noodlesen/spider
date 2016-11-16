@@ -51,7 +51,7 @@ def random_request( destinations):
 
 
         dest_name = destination[0]
-        number = destination[3]
+        score = destination[3]
         i=0
         bids_count = len(month_bids['data'])
 
@@ -92,7 +92,7 @@ def random_request( destinations):
                 now = datetime.now()
                 td = bid.departure_date - now
                 days_to = td.days
-                rating = int(bid.distance/bid.price*1000*k/(bid.stops+1)+number/10)-days_to-2**i if i<=10 else 0
+                rating = int(bid.distance/bid.price*1000*k/(bid.stops+1)+score/10)-days_to-2**i if i<=10 else 0
                 lim_low = int(bid.distance/400)
                 lim_high = int(bid.distance/200)
                 dur = (bid.return_date - bid.departure_date).days

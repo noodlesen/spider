@@ -55,7 +55,7 @@ class Destination(db.Model):
     name = db.Column(db.String(35))
     code = db.Column(db.String(3))
     country = db.Column(db.String(35))
-    number = db.Column(db.Integer) 
+    score = db.Column(db.Integer) 
 
 class DestinationStats(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -69,6 +69,19 @@ class DestinationStats(db.Model):
     def last_request_time():
         last = list(db.engine.execute("""SELECT requested_at FROM destination_stats ORDER BY requested_at DESC LIMIT 1"""))[0][0]
         return last
+
+# TEMP
+
+    class AddAirport(db.Model):
+        id = db.Column(db.Integer, primary_key=True)
+        iata = db.Column(db.String(3))
+        city_code = db.Column(db.String(3))
+        city = db.Column(db.String(50))
+        country_code = db.Column(db.String(3))
+        country = db.Column(db.String(50))
+
+
+
 
 
 
