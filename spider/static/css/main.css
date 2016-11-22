@@ -335,6 +335,7 @@ h1 {
 
 /* line 13, scss/main.scss */
 .bid__row {
+  color: white;
   display: block;
   font-size: 120%;
   padding: 5px .5em;
@@ -344,46 +345,55 @@ h1 {
   margin-bottom: 10px;
   width: 100%;
 }
-
+/* line 24, scss/main.scss */
+.bid__row a {
+  text-decoration: none;
+}
 /* line 26, scss/main.scss */
-.bid__row:nth-child(odd) {
-  color: #ff9800;
+.bid__row a.normal-price {
+  color: white;
+}
+/* line 29, scss/main.scss */
+.bid__row a.special-price {
+  color: magenta;
 }
 
-/* line 30, scss/main.scss */
-.bid__row:nth-child(even) {
-  color: #55d426;
+/* .bid__row:nth-child(odd){
+    color: $orange;
 }
 
-/* line 34, scss/main.scss */
+.bid__row:nth-child(even){
+    color: $green;
+}  */
+/* line 45, scss/main.scss */
 .bid-part {
   display: inline-block;
   text-align: center;
 }
 
-/* line 39, scss/main.scss */
+/* line 50, scss/main.scss */
 .bid__destination {
   font-weight: 600;
   width: 7%;
 }
 
-/* line 44, scss/main.scss */
+/* line 55, scss/main.scss */
 .bid__dest-name {
   width: 20%;
 }
 
-/* line 48, scss/main.scss */
+/* line 59, scss/main.scss */
 .bid__price {
   font-weight: 600;
   width: 15%;
 }
 
-/* line 53, scss/main.scss */
+/* line 64, scss/main.scss */
 .bid__dates {
   min-width: 25%;
 }
 
-/* line 57, scss/main.scss */
+/* line 68, scss/main.scss */
 .rsign {
   font-size: 80%;
   font-weight: lighter;
@@ -391,60 +401,43 @@ h1 {
 }
 
 /* always present */
-/* line 67, scss/main.scss */
+/* line 78, scss/main.scss */
 .expand-transition {
   transition: all .3s ease;
 }
 
 /* .expand-enter defines the starting state for entering */
 /* .expand-leave defines the ending state for leaving */
-/* line 72, scss/main.scss */
+/* line 83, scss/main.scss */
 .expand-enter, .expand-leave {
   opacity: 0;
 }
 
-/* line 79, scss/main.scss */
+/* line 90, scss/main.scss */
 .flip {
   transition: transform 1s;
 }
 
-/* line 84, scss/main.scss */
+/* line 95, scss/main.scss */
 .bounce-transition {
   display: inline-block;
   /* otherwise scale animation won't work */
 }
 
-/* line 87, scss/main.scss */
+/* line 98, scss/main.scss */
 .bounce-enter {
   animation: bounce-in .5s;
 }
 
-/* line 90, scss/main.scss */
+/* line 101, scss/main.scss */
 .bounce-leave {
   animation: bounce-out .5s;
 }
 
 @keyframes bounce-in {
-  /* line 94, scss/main.scss */
-  0% {
-    transform: scale(0);
-  }
-
-  /* line 97, scss/main.scss */
-  50% {
-    transform: scale(1.5);
-  }
-
-  /* line 100, scss/main.scss */
-  100% {
-    transform: scale(1);
-  }
-}
-
-@keyframes bounce-out {
   /* line 105, scss/main.scss */
   0% {
-    transform: scale(1);
+    transform: scale(0);
   }
 
   /* line 108, scss/main.scss */
@@ -454,18 +447,35 @@ h1 {
 
   /* line 111, scss/main.scss */
   100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes bounce-out {
+  /* line 116, scss/main.scss */
+  0% {
+    transform: scale(1);
+  }
+
+  /* line 119, scss/main.scss */
+  50% {
+    transform: scale(1.5);
+  }
+
+  /* line 122, scss/main.scss */
+  100% {
     transform: scale(0);
   }
 }
 
-/* line 117, scss/main.scss */
+/* line 128, scss/main.scss */
 .staggered-transition {
   transition: all 2s ease;
   margin: 0;
   background-color: #323232;
 }
 
-/* line 124, scss/main.scss */
+/* line 135, scss/main.scss */
 .staggered-enter, .staggered-leave {
   background-color: #55d426;
   opacity: 0;

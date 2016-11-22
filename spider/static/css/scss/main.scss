@@ -11,7 +11,7 @@ h1 {
 }
 
 .bid__row{
-    //color:$green;
+    color:white;
     display: block;
     font-size: 120%;
     padding: 5px .5em;
@@ -21,15 +21,26 @@ h1 {
     border-style: solid; 
     margin-bottom: 10px;
     width:100%;
+    a {
+      text-decoration: none;
+      &.normal-price{
+        color: white;
+      }
+      &.special-price{
+        color:magenta;
+      }
+    }
 }
 
-.bid__row:nth-child(odd){
+
+
+/* .bid__row:nth-child(odd){
     color: $orange;
 }
 
 .bid__row:nth-child(even){
     color: $green;
-} 
+}  */
 
 .bid-part{
     display: inline-block;

@@ -60,7 +60,7 @@ class Destination(db.Model):
 class DestinationStats(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     code = db.Column(db.String(3))
-    avg_price = db.Column(db.Integer)
+    avg_price = db.Column(db.Integer, default=0)
     total_bid_count = db.Column(db.Integer, default=0)
     results_count = db.Column(db.Integer)
     requested_at = db.Column(db.DateTime)

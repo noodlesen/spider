@@ -5,6 +5,7 @@ from math import pi, cos, sin, sqrt, atan2
 from random import randint
 
 
+
 def get_hash(s):
     hsh = hashlib.md5()
     hsh.update(s.encode("utf-8"))

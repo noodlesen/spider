@@ -26,18 +26,29 @@ def random_request( destinations):
     allowed=False
     stat = DestinationStats.query.filter_by(code=destination[1]).first()
     if not stat:
-        print("not exists")
+        print("stat not exists")
         stat = DestinationStats()
         stat.code = destination[1]
+        stat.total_bid_count = 0
+        stat.avg_price = 0
+        stat.results_count = 0
         allowed = True
     else:
-        print("exists")
+        print("stat exists")
         if stat.results_count==0:
             print("no results last time")
             allowed = chances(10)
             print("allowed ", allowed)
+        elif (stat.requested_at-datetime.utcnow()).seconds>24*3600:
+            print ('Last request is older than 24h - OK')
+            allowed=True
+        else:
+            print ('Too early for this request - next time')
 
     stat.requested_at = datetime.utcnow()
+
+    sum_price = 0
+    sum_bids = 0
 
 
     if allowed:
@@ -57,6 +68,7 @@ def random_request( destinations):
 
         stat.results_count = bids_count
 
+        
         for b in month_bids['data']:
             destination = b['destination']
             found_at = datetime.strptime( ':'.join(b['found_at'].split(':')[:-1])+'00', '%Y-%m-%dT%H:%M:%S%z') 
@@ -78,6 +90,8 @@ def random_request( destinations):
                 bid.dest_name = dest_name.upper()
                 bid.one_way = month_bids['params']['one_way']
                 bid.price = price
+                sum_price += price
+                sum_bids += 1
                 bid.trip_class = b['trip_class']
                 bid.stops = b['number_of_changes']
                 bid.distance = b['distance']
@@ -110,6 +124,11 @@ def random_request( destinations):
                 db.session.commit()
 
                 i+=1
+
+    new_bid_count = stat.total_bid_count+sum_bids
+    if new_bid_count >0:
+        stat.avg_price= int((stat.avg_price*stat.total_bid_count+sum_price)/new_bid_count)
+        stat.total_bid_count=new_bid_count
 
     db.session.add(stat)
     db.session.commit()

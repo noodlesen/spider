@@ -22,6 +22,8 @@ from .models import Bid, Ask, UserQuery, DestinationStats
 
 from .requester import random_request
 
+from .toolbox import russian_plurals
+
 
 app = Flask(__name__)
 
@@ -109,8 +111,8 @@ def bid_feed():
     res = {'success': True, 'bids': []}
 
     #move to toolbox
-    fields = ['destination', 'departure_date', 'return_date', 'price', 'rating', 'dest_name', 'stops']
-    bids = list(db.engine.execute(""" SELECT %s FROM bid WHERE to_expose=1 ORDER BY rating DESC LIMIT 50""" % ','.join(fields)))
+    fields = ['destination', 'departure_date', 'return_date', 'price', 'rating', 'dest_name', 'stops', 'found_at']
+    bids = list(db.engine.execute(""" SELECT b.%s, s.avg_price FROM bid as b JOIN destination_stats as s ON b.destination=s.code WHERE to_expose=1 ORDER BY rating DESC LIMIT 50""" % ', b.'.join(fields)))
     for b in bids:
         nb = {}
         i=0
@@ -135,8 +137,35 @@ def bid_feed():
 
             nb[f]=bf
             i+=1
+
+        nb['age']=(b['found_at']-datetime.utcnow()).seconds
+        if nb['age']<3*3600:
+            nb['age_color']='#00ff00'
+        elif nb['age']>12*3600:
+            nb['age_color']='#ddaa00'
+        else:
+            nb['age_color']='white'
+
+        dayz = (b[2]-b[1]).days
+        print('????????')
+        print(b[1])
+        print(b[2])
+        nb['days']=str(dayz)+" "+russian_plurals('день', dayz)
+
+        # MAX_AGE= 3600*24
+        # age_prc = nb['age']/MAX_AGE
+        # g=hex(int(255-120*age_prc))[2:]
+        # r=hex(int(128*age_prc))[2:]
+        # bc=hex(int(96*age_prc))[2:]
+        # r = "0"+r if len(r)<2 else r
+        # g = "0"+g if len(g)<2 else g
+        # bc = "0"+bc if len(bc)<2 else bc
+        # nb['age_color']="#"+r+g+bc
+
         tpurl="http://aviasales.ru/?origin_iata=MOW"
         nb['href']=tpurl+"&destination_iata=%s&depart_date=%s&return_date=%s" % (nb['destination'],dd_url, rd_url)
+        #nb['special'] = True if nb['price']<10000 else False    
+        nb['special'] = True if nb['price']<0.66*b[8] else False    
         res['bids'].append(nb)
 
     return json.dumps(res)
@@ -146,9 +175,9 @@ def bid_feed():
 def pulse():
     res={}
     print ('ACCEPTED '+str(datetime.utcnow())) 
-    if (datetime.utcnow()-DestinationStats.last_request_time()).seconds<10:
+    if (datetime.utcnow()-DestinationStats.last_request_time()).seconds<7:
         res['success']=False
-        print ("Too early -skip")
+        print ("Too early for any request - skip")
     else:
         destinations = [p for p in db.engine.execute("""SELECT name, code, country, score FROM destination""")]
         random_request(destinations)
