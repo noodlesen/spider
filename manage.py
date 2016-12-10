@@ -16,11 +16,12 @@ manager = Manager(app)
 @manager.command
 def preload():
     destinations = [p for p in db.engine.execute("""SELECT name, code, country, score FROM destination""")]
-    while True:
+    n=0
+    while n<10:
         random_request( destinations)
-        t = randint(2,10)
-        print ('SLEEPING', t)
-        sleep(t)
+        print ('SLEEPING', 3)
+        sleep(3)
+        n+=1
 
 @manager.command
 def scheduled():

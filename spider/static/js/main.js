@@ -38,30 +38,30 @@ var bidFeed = new Vue({
         allBids: []
     },
     ready: function(){
-        var currentdate = new Date(); 
+        var currentdate = new Date();
         var sc = currentdate.getSeconds();
         var self = this;
         getResults('/bid-feed', 'json', {}, function(res){
             if (res.success){
                 self.allBids = res.bids;
                 var i=0;
-                
+
                 setTimeout(function cycle(){
                     i++;
                     if (self.allBids.length>0){
                         var ri = Math.floor(Math.random() * self.allBids.length);
                         self.shownBids.push(self.allBids.splice(ri,1)[0]);
                         self.sortBids();
-                        console.log('>>');
-                        getResults('/pulse', 'json', {}, function(res){});
+                        //console.log('>>');
+                        //getResults('/pulse', 'json', {}, function(res){});
                     } else {
-                        location.reload();
+                        //location.reload();
                     }
                     setTimeout(cycle, i*100+Math.floor((Math.sin(i+sc)+1)*750));
                 },1500);
 
 
-             
+
             }
         });
     },

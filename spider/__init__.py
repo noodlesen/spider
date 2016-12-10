@@ -117,7 +117,7 @@ def bid_feed():
         nb = {}
         i=0
         for f in fields:
-            
+
             if isinstance(b[i], datetime):
                 bf = datetime.strftime(b[i], '%b %d')
                 if f=='departure_date':
@@ -164,24 +164,24 @@ def bid_feed():
 
         tpurl="http://aviasales.ru/?origin_iata=MOW"
         nb['href']=tpurl+"&destination_iata=%s&depart_date=%s&return_date=%s" % (nb['destination'],dd_url, rd_url)
-        #nb['special'] = True if nb['price']<10000 else False    
-        nb['special'] = True if nb['price']<0.66*b[8] else False    
+        #nb['special'] = True if nb['price']<10000 else False
+        nb['special'] = True if nb['price']<0.66*b[8] else False
         res['bids'].append(nb)
 
     return json.dumps(res)
 
 
-@app.route('/pulse', methods = ['POST'])
-def pulse():
-    res={}
-    print ('ACCEPTED '+str(datetime.utcnow())) 
-    if (datetime.utcnow()-DestinationStats.last_request_time()).seconds<7:
-        res['success']=False
-        print ("Too early for any request - skip")
-    else:
-        destinations = [p for p in db.engine.execute("""SELECT name, code, country, score FROM destination""")]
-        random_request(destinations)
-    return json.dumps({'success':True})
+#@app.route('/pulse', methods = ['POST'])
+#def pulse():
+#    res={}
+#    print ('ACCEPTED '+str(datetime.utcnow()))
+#    if (datetime.utcnow()-DestinationStats.last_request_time()).seconds<7:
+#        res['success']=False
+#        print ("Too early for any request - skip")
+#    else:
+#        destinations = [p for p in db.engine.execute("""SELECT name, code, country, score FROM destination""")]
+#        random_request(destinations)
+#    return json.dumps({'success':True})
 
 
 

@@ -33,7 +33,7 @@ def random_request( destinations):
         stat.avg_price = 0
         stat.results_count = 0
         allowed = True
-        
+
     else:
         print("stat exists")
         days_to_last_request = (datetime.utcnow()-stat.requested_at).days
@@ -70,10 +70,10 @@ def random_request( destinations):
 
         stat.results_count = bids_count
 
-        
+
         for b in month_bids['data']:
             destination = b['destination']
-            found_at = datetime.strptime( ':'.join(b['found_at'].split(':')[:-1])+'00', '%Y-%m-%dT%H:%M:%S%z') 
+            found_at = datetime.strptime( ':'.join(b['found_at'].split(':')[:-1])+'00', '%Y-%m-%dT%H:%M:%S%z')
             departure_date = datetime.strptime( b['depart_date'],'%Y-%m-%d')
             price = b['value']
 
@@ -101,7 +101,7 @@ def random_request( destinations):
                 if 'return_date' in b.keys():
                     bid.return_date = datetime.strptime( b['return_date'], '%Y-%m-%d')
 
-                bid.found_at = found_at 
+                bid.found_at = found_at
 
                 bid.snapshot = snapshot
                 k = 2 if bid.one_way =="false" else 1
@@ -119,7 +119,7 @@ def random_request( destinations):
                     pen_days=lim_low-dur
                 rating-=pen_days*5
                 bid.rating = rating
-                bid.to_expose = True if i<=5 else False
+                bid.to_expose = True if i==0 else False
                 print(bid.found_at)
 
                 db.session.add(bid)
