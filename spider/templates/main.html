@@ -15,20 +15,29 @@
             <h1>FLY FROM <span style="color:red; font-size:.75em;" class="glyphicon glyphicon-star"></span> MOSCOW</h1>
             <div id="bid-feed">
                     <div class="bid__row" v-for="b in shownBids" transition="staggered" stagger="100" :style="{color:b.age_color}">
-                        <span class="bid-part bid__destination" v-text="b.destination"></span> |
-                        <span class="bid-part bid__dest-name" v-text="b.dest_name|uppercase"></span> |
+                        <span class="bid-part bid__destination" v-text="b.destination"></span>
+                        <span class="bid-part bid__dest-name" v-text="b.dest_name|uppercase"></span>
                         <span class="bid-part bid__price">
-                            <a v-text="b.price" :href="b.href" target="_blank" :class="{'special-price': b.special, 'normal-price': !b.special}"></a>
+                            <span class="window">
+                               <a v-text="b.price" :href="b.href" target="_blank" :class="{'special-price': b.special, 'normal-price': !b.special}"></a>
+                            
                             <span class="rsign">&#8381;</span>
+                            </span>
+
                         </span>
+                        
+                        <span class="bid-part bid__days">
+                            <span v-text="b.days"></span>
+                        </span>
+                        <span class="bid-part bid__dates">
+                            <span class="window" v-text="b.departure_date"></span>
+                            <span class="glyphicon glyphicon-triangle-left"></span>
+                            <span class="glyphicon glyphicon-triangle-right"></span>
+                            <span class="window" v-text="b.return_date"></span>
+                        </span>
+
                         <span class="bid-part bid__stops" v-text="b.stops"></span>
-                        <span class="bid-part bid__dates">| >
-                            <span v-text="b.departure_date"></span>
-                            ...
-                            <span v-text="b.return_date"></span>
-                            < |
-                        </span>
-                        <span v-text="b.days"></span>
+                        
                     </div>
 
             </div>

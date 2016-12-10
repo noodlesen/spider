@@ -45,6 +45,12 @@ h1 {
 .bid-part{
     display: inline-block;
     text-align: center;
+    border-width: 0 1px 0 0;
+    border-color: white;
+    border-style: solid;
+    &:last-of-type{
+      border-width: 0;
+    }
 }
 
 .bid__destination{
@@ -57,12 +63,29 @@ h1 {
 }
 
 .bid__price{
-    font-weight: 600;
+    //font-weight: 600;
     width: 15%;
+    font-size: 110%;
 }
 
 .bid__dates{
-    min-width: 25%;
+    min-width: 28%;
+}
+
+.bid__stops{
+  width:10%;
+}
+
+.bid__days{
+  width:10%;
+}
+
+.window {
+  padding: 0 .5em;
+  background-color:black;
+  border-radius:3px;
+  font-weight: 600;
+
 }
 
 .rsign{

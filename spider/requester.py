@@ -33,17 +33,19 @@ def random_request( destinations):
         stat.avg_price = 0
         stat.results_count = 0
         allowed = True
+        
     else:
         print("stat exists")
+        days_to_last_request = (datetime.utcnow()-stat.requested_at).days
         if stat.results_count==0:
             print("no results last time")
             allowed = chances(10)
             print("allowed ", allowed)
-        elif (stat.requested_at-datetime.utcnow()).seconds>24*3600:
-            print ('Last request is older than 24h - OK')
+        elif days_to_last_request >= 1:
+            print ('Last request is older than 24h - %d OK' % days_to_last_request)
             allowed=True
         else:
-            print ('Too early for this request - next time')
+            print ('Too early for this request - next time', days_to_last_request)
 
     stat.requested_at = datetime.utcnow()
 
@@ -56,7 +58,7 @@ def random_request( destinations):
         print("proceed...")
 
         #====
-        month_bids = get_month_bids({"beginning_of_period": "2016-12-01", "destination": destination[1], "origin":"MOW" })
+        month_bids = get_month_bids({"beginning_of_period": "2017-01-01", "destination": destination[1], "origin":"MOW" })
         #====
 
 
