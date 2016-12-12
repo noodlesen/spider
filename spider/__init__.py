@@ -20,7 +20,7 @@ from .logger import Log
 
 from .models import Bid, Ask, UserQuery, DestinationStats
 
-from .requester import random_request
+#from .requester import random_request
 
 from .toolbox import russian_plurals
 

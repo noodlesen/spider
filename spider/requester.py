@@ -10,14 +10,21 @@ from .db import db
 from .tpapi import get_month_bids
 from .toolbox import get_hash, fib, chances
 
+
+
+
+
+
+
+
 def bid_cleanup(d):
     last = datetime.today() - timedelta(d)
     db.engine.execute("""DELETE FROM bid WHERE found_at<'%s'""" % last)
 
 #=======================
-def random_request( destinations):
+def request_destination(destination, start_dt):
     bid_cleanup(2)
-    destination = destinations[randint(0, len(destinations)-1)]
+    #destination = destinations[randint(0, len(destinations)-1)]
     print()
     print(datetime.utcnow())
     print ('REQUESTING %s' % destination[0])
@@ -47,7 +54,7 @@ def random_request( destinations):
         else:
             print ('Too early for this request - next time', days_to_last_request)
 
-    stat.requested_at = datetime.utcnow()
+    #stat.requested_at = datetime.utcnow()
 
     sum_price = 0
     sum_bids = 0
@@ -58,7 +65,7 @@ def random_request( destinations):
         print("proceed...")
 
         #====
-        month_bids = get_month_bids({"beginning_of_period": "2017-01-01", "destination": destination[1], "origin":"MOW" })
+        month_bids = get_month_bids({"beginning_of_period": start_dt.strftime('%Y-%m-%d'), "destination": destination[1], "origin":"MOW" })
         #====
 
 
@@ -77,14 +84,13 @@ def random_request( destinations):
             departure_date = datetime.strptime( b['depart_date'],'%Y-%m-%d')
             price = b['value']
 
+            # check if the bid is unique
             snapshot = get_hash(destination+str(price)+str(found_at)+str(departure_date))
-
             snap_count = len(list(db.engine.execute("""SELECT id FROM bid WHERE snapshot="%s" """ % snapshot)))
             print("snapcount "+str(snap_count))
 
             if snap_count ==0:
 
-                #rint(b)
                 print (destination, price)
                 bid = Bid()
                 bid.origin = b['origin']
@@ -134,5 +140,7 @@ def random_request( destinations):
 
     db.session.add(stat)
     db.session.commit()
+
+    return (stat)
 
 

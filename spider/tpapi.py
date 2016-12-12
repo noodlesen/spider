@@ -11,7 +11,7 @@ API_BASE = "http://api.travelpayouts.com/"
 EP_LATEST = {"endpoint": "v2/prices/latest",
              "defaults": {"currency": "rub",
                           "page": 1,
-                          "limit": 100,
+                          "limit": 30,
                           "show_to_affiliates": "false",
                           "sorting": "price",
                           "trip_class": 0,
