@@ -1,7 +1,15 @@
 @import "config";
 
+#logo{
+  width:160px; 
+  display: block;
+  margin: 0 auto -1.2em;
+}
+
 h1 {
     text-align: center;
+    font-size: 150%;
+    color: black;
 }
 #bid-feed{
     background-color: $gray1;

@@ -51,13 +51,13 @@ def preload():
 
         print()
         print('AFTER')
-        stat = request_destination(destination, after_next_month_start)
+        request_destination(destination, after_next_month_start)
         print ('SLEEPING', 3)
         sleep(3)
         
-        stat.requested_at = datetime.utcnow()
-        db.session.add(stat)
-        db.session.commit()
+        # stat.requested_at = datetime.utcnow()
+        # db.session.add(stat)
+        # db.session.commit()
         n+=1
 
 @manager.command

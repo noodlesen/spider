@@ -12,7 +12,8 @@
     <div class="row">
 
         <div class="col-lg-10 col-lg-offset-1">
-            <h1>FLY FROM <span style="color:red; font-size:.75em;" class="glyphicon glyphicon-star"></span> MOSCOW</h1>
+            <img id="logo" src="{{url_for('static', filename='images/fly2.svg')}}" />
+            <h1>FROM <span style="color:red; font-size:.75em;" class="glyphicon glyphicon-star"></span> MOSCOW</h1>
             <div id="bid-feed">
                     <div class="bid__row" v-for="b in shownBids" transition="staggered" stagger="100" :style="{color:b.age_color}">
                         <span class="bid-part bid__destination" v-text="b.destination"></span>

@@ -51,10 +51,11 @@ def request_destination(destination, start_dt):
         elif days_to_last_request >= 1:
             print ('Last request is older than 24h - %d OK' % days_to_last_request)
             allowed=True
+
         else:
             print ('Too early for this request - next time', days_to_last_request)
 
-    #stat.requested_at = datetime.utcnow()
+    
 
     sum_price = 0
     sum_bids = 0
@@ -63,6 +64,8 @@ def request_destination(destination, start_dt):
     if allowed:
 
         print("proceed...")
+
+        stat.requested_at = datetime.utcnow()
 
         #====
         month_bids = get_month_bids({"beginning_of_period": start_dt.strftime('%Y-%m-%d'), "destination": destination[1], "origin":"MOW" })

@@ -321,11 +321,20 @@
 }
 
 /* line 3, scss/main.scss */
-h1 {
-  text-align: center;
+#logo {
+  width: 160px;
+  display: block;
+  margin: 0 auto -1.2em;
 }
 
-/* line 6, scss/main.scss */
+/* line 9, scss/main.scss */
+h1 {
+  text-align: center;
+  font-size: 150%;
+  color: black;
+}
+
+/* line 14, scss/main.scss */
 #bid-feed {
   background-color: #323232;
   padding: 1em;
@@ -333,7 +342,7 @@ h1 {
   min-height: 10em;
 }
 
-/* line 13, scss/main.scss */
+/* line 21, scss/main.scss */
 .bid__row {
   color: white;
   display: block;
@@ -345,15 +354,15 @@ h1 {
   margin-bottom: 10px;
   width: 100%;
 }
-/* line 24, scss/main.scss */
+/* line 32, scss/main.scss */
 .bid__row a {
   text-decoration: none;
 }
-/* line 26, scss/main.scss */
+/* line 34, scss/main.scss */
 .bid__row a.normal-price {
   color: white;
 }
-/* line 29, scss/main.scss */
+/* line 37, scss/main.scss */
 .bid__row a.special-price {
   color: magenta;
 }
@@ -365,7 +374,7 @@ h1 {
 .bid__row:nth-child(even){
     color: $green;
 }  */
-/* line 45, scss/main.scss */
+/* line 53, scss/main.scss */
 .bid-part {
   display: inline-block;
   text-align: center;
@@ -373,44 +382,44 @@ h1 {
   border-color: white;
   border-style: solid;
 }
-/* line 51, scss/main.scss */
+/* line 59, scss/main.scss */
 .bid-part:last-of-type {
   border-width: 0;
 }
 
-/* line 56, scss/main.scss */
+/* line 64, scss/main.scss */
 .bid__destination {
   font-weight: 600;
   width: 7%;
 }
 
-/* line 61, scss/main.scss */
+/* line 69, scss/main.scss */
 .bid__dest-name {
   width: 20%;
 }
 
-/* line 65, scss/main.scss */
+/* line 73, scss/main.scss */
 .bid__price {
   width: 15%;
   font-size: 110%;
 }
 
-/* line 71, scss/main.scss */
+/* line 79, scss/main.scss */
 .bid__dates {
   min-width: 28%;
 }
 
-/* line 75, scss/main.scss */
+/* line 83, scss/main.scss */
 .bid__stops {
   width: 10%;
 }
 
-/* line 79, scss/main.scss */
+/* line 87, scss/main.scss */
 .bid__days {
   width: 10%;
 }
 
-/* line 83, scss/main.scss */
+/* line 91, scss/main.scss */
 .window {
   padding: 0 .5em;
   background-color: black;
@@ -418,7 +427,7 @@ h1 {
   font-weight: 600;
 }
 
-/* line 91, scss/main.scss */
+/* line 99, scss/main.scss */
 .rsign {
   font-size: 80%;
   font-weight: lighter;
@@ -426,81 +435,81 @@ h1 {
 }
 
 /* always present */
-/* line 101, scss/main.scss */
+/* line 109, scss/main.scss */
 .expand-transition {
   transition: all .3s ease;
 }
 
 /* .expand-enter defines the starting state for entering */
 /* .expand-leave defines the ending state for leaving */
-/* line 106, scss/main.scss */
+/* line 114, scss/main.scss */
 .expand-enter, .expand-leave {
   opacity: 0;
 }
 
-/* line 113, scss/main.scss */
+/* line 121, scss/main.scss */
 .flip {
   transition: transform 1s;
 }
 
-/* line 118, scss/main.scss */
+/* line 126, scss/main.scss */
 .bounce-transition {
   display: inline-block;
   /* otherwise scale animation won't work */
 }
 
-/* line 121, scss/main.scss */
+/* line 129, scss/main.scss */
 .bounce-enter {
   animation: bounce-in .5s;
 }
 
-/* line 124, scss/main.scss */
+/* line 132, scss/main.scss */
 .bounce-leave {
   animation: bounce-out .5s;
 }
 
 @keyframes bounce-in {
-  /* line 128, scss/main.scss */
+  /* line 136, scss/main.scss */
   0% {
     transform: scale(0);
   }
 
-  /* line 131, scss/main.scss */
+  /* line 139, scss/main.scss */
   50% {
     transform: scale(1.5);
   }
 
-  /* line 134, scss/main.scss */
+  /* line 142, scss/main.scss */
   100% {
     transform: scale(1);
   }
 }
 
 @keyframes bounce-out {
-  /* line 139, scss/main.scss */
+  /* line 147, scss/main.scss */
   0% {
     transform: scale(1);
   }
 
-  /* line 142, scss/main.scss */
+  /* line 150, scss/main.scss */
   50% {
     transform: scale(1.5);
   }
 
-  /* line 145, scss/main.scss */
+  /* line 153, scss/main.scss */
   100% {
     transform: scale(0);
   }
 }
 
-/* line 151, scss/main.scss */
+/* line 159, scss/main.scss */
 .staggered-transition {
   transition: all 2s ease;
   margin: 0;
   background-color: #323232;
 }
 
-/* line 158, scss/main.scss */
+/* line 166, scss/main.scss */
 .staggered-enter, .staggered-leave {
   background-color: #55d426;
   opacity: 0;
