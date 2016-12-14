@@ -162,7 +162,7 @@ def bid_feed():
         # bc = "0"+bc if len(bc)<2 else bc
         # nb['age_color']="#"+r+g+bc
 
-        tpurl="http://aviasales.ru/?origin_iata=MOW"
+        tpurl="http://aviasales.ru/?marker=14721&origin_iata=MOW"
         nb['href']=tpurl+"&destination_iata=%s&depart_date=%s&return_date=%s" % (nb['destination'],dd_url, rd_url)
         #nb['special'] = True if nb['price']<10000 else False
         nb['special'] = True if nb['price']<0.66*b[8] else False
@@ -183,6 +183,19 @@ def bid_feed():
 #        random_request(destinations)
 #    return json.dumps({'success':True})
 
+
+@app.route('/save-email', methods=['POST'])
+def save_email():
+    q = request.json
+    if q['email']!='' and '@' in q['email'] and '.' in q['email']:
+        #try:
+        db.engine.execute("""INSERT INTO subscribers (`email`, `marker`) VALUES ("%s", "%s")""" % (q['email'], session['marker']))
+        # except:
+        #     pass
+        success = True
+    else:
+        success = False
+    return json.dumps({"success": success})
 
 
 

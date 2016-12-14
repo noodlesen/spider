@@ -31,6 +31,28 @@ Vue.transition('stagger', {
 })
 
 
+var subscribeForm = new Vue({
+    el: '#subscription',
+    data: {
+        email:'',
+        sent: false,
+        showBlock: true
+    },
+    methods: {
+        saveEmail: function(){
+            var self = this;
+            getResults('/save-email','json',{email: this.email}, function(res){
+                if (res.success){
+                    self.sent = true;
+                }
+            });
+        },
+        hideBlock: function(){
+            this.showBlock = false;
+        }
+    }
+});
+
 var bidFeed = new Vue({
     el: '#bid-feed',
     data: {
