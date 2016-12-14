@@ -89,14 +89,7 @@ h2 {
 }
 
 
-
-/* .bid__row:nth-child(odd){
-    color: $orange;
-}
-
-.bid__row:nth-child(even){
-    color: $green;
-}  */
+//====================================================
 
 .bid-part{
     display: inline-block;
@@ -136,6 +129,50 @@ h2 {
   width:10%;
 }
 
+
+.s_bid-part{
+    display: inline-block;
+    text-align: center;
+
+    &:last-of-type{
+      border-width: 0;
+    }
+}
+
+.s_bid__destination{
+    font-weight: 600;
+    width: 7%;
+}
+
+.s_bid__dest-name{
+    font-size: 130%;
+    display: block;
+    float: left;
+}
+
+.s_bid__price{
+    font-size: 130%;
+    text-align: right;
+    display: block;
+    float: right;
+}
+
+.s_bid__dates{
+    //min-width: 28%;
+}
+
+.s_bid__stops{
+  //width:10%;
+}
+
+.s_bid__days{
+  //width:10%;
+}
+
+.second-line{
+  font-size: 90%;
+}
+
 .window {
   padding: 0 .5em;
   background-color:black;
@@ -149,6 +186,25 @@ h2 {
     font-weight: lighter;
     color:$gray2;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // TRANSITIONS

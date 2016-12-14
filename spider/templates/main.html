@@ -33,7 +33,13 @@
             </div>
 
             <div id="bid-feed">
-                    <div class="bid__row" v-for="b in shownBids" transition="staggered" stagger="100" :style="{color:b.age_color}">
+
+                    <div class="bid__row visible-lg visible-md" 
+                         v-for="b in shownBids" 
+                         transition="staggered" 
+                         stagger="100" 
+                         :style="{color:b.age_color}">
+
                         <span class="bid-part bid__destination" v-text="b.destination"></span>
                         <span class="bid-part bid__dest-name" v-text="b.dest_name|uppercase"></span>
                         <span class="bid-part bid__price">
@@ -56,6 +62,44 @@
                         </span>
 
                         <span class="bid-part bid__stops" v-text="b.stops"></span>
+                        
+                    </div>
+
+                    <div class="bid__row visible-sm visible-xs" 
+                         v-for="b in shownBids" 
+                         transition="staggered" 
+                         stagger="100" 
+                         :style="{color:b.age_color}">
+                        
+                        <div>
+                        <span class="s_bid-part s_bid__dest-name" v-text="b.dest_name|uppercase"></span>
+
+                        <span class="s_bid-part s_bid__price">
+                            <span class="window">
+                               <a v-text="b.price" :href="b.href" target="_blank" :class="{'special-price': b.special, 'normal-price': !b.special}"></a>
+                            
+                            <span class="rsign">&#8381;</span>
+                            </span>
+
+                        </span>
+                        <div class="clearfix"></div>
+                        </div>  
+
+                        <div class="second-line">
+                            <span class="s_bid-part s_bid__dates">
+                                <span v-text="b.departure_date"></span>
+                                <span class="glyphicon glyphicon-triangle-left"></span>
+                                <span class="s_bid-part s_bid__days">
+                                    <span v-text="b.days"></span>
+                                </span>
+                                <span class="glyphicon glyphicon-triangle-right"></span>
+                                <span v-text="b.return_date"></span>
+                            </span>
+                            &nbsp;|&nbsp;
+                            <span class="s_bid-part s_bid__stops" v-text="b.stops"></span>
+                        </div>
+
+
                         
                     </div>
 
