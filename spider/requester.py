@@ -18,11 +18,14 @@ from .toolbox import get_hash, fib, chances
 
 
 def bid_cleanup(d):
-    last = datetime.today() - timedelta(d)
-    db.engine.execute("""DELETE FROM bid WHERE found_at<'%s'""" % last)
+    today = datetime.today()
+    last = today - timedelta(d)
+    db.engine.execute(""" DELETE FROM bid WHERE found_at<'%s' """ % last)
+    db.engine.execute(""" DELETE FROM bid WHERE departure_date<='%s' """ % today)
+    db.engine.execute(""" DELETE FROM bid WHERE departure_date=return_date """)
 
 #=======================
-def request_destination(destination, start_dt):
+def request_destination(destination, start_dt, check_time=True):
     bid_cleanup(2)
     #destination = destinations[randint(0, len(destinations)-1)]
     print()
@@ -53,7 +56,10 @@ def request_destination(destination, start_dt):
             allowed=True
 
         else:
-            print ('Too early for this request - next time', days_to_last_request)
+            if check_time:
+                print ('Too early for this request - next time', days_to_last_request)
+            else: 
+                allowed = True
 
     
 

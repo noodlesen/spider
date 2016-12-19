@@ -45,13 +45,13 @@ def preload():
 
         print()
         print('NEXT')
-        request_destination(destination, next_month_start)
+        request_destination(destination, next_month_start, False)
         print ('SLEEPING', 3)
         sleep(3)
 
         print()
         print('AFTER')
-        request_destination(destination, after_next_month_start)
+        request_destination(destination, after_next_month_start, False)
         print ('SLEEPING', 3)
         sleep(3)
         
