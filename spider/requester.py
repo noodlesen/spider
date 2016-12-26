@@ -58,10 +58,10 @@ def request_destination(destination, start_dt, check_time=True):
         else:
             if check_time:
                 print ('Too early for this request - next time', days_to_last_request)
-            else: 
+            else:
                 allowed = True
 
-    
+
 
     sum_price = 0
     sum_bids = 0
@@ -94,7 +94,7 @@ def request_destination(destination, start_dt, check_time=True):
             price = b['value']
 
             # check if the bid is unique
-            snapshot = get_hash(destination+str(price)+str(found_at)+str(departure_date))
+            snapshot = get_hash(destination+str(price)+str(departure_date))
             snap_count = len(list(db.engine.execute("""SELECT id FROM bid WHERE snapshot="%s" """ % snapshot)))
             print("snapcount "+str(snap_count))
 
