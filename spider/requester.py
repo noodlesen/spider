@@ -140,7 +140,7 @@ def request_destination(destination, start_dt, check_time=True):
                 db.session.add(bid)
                 db.session.commit()
 
-                i+=1
+            i+=1
 
     new_bid_count = stat.total_bid_count+sum_bids
     if new_bid_count >0:

@@ -9,6 +9,8 @@ from datetime import datetime
 from spider.logger import Log
 from math import floor
 
+from spider.mandrill import send_test_email
+
 manager = Manager(app)
 
 
@@ -54,7 +56,7 @@ def preload():
         request_destination(destination, after_next_month_start, False)
         print ('SLEEPING', 3)
         sleep(3)
-        
+
         # stat.requested_at = datetime.utcnow()
         # db.session.add(stat)
         # db.session.commit()
@@ -65,6 +67,11 @@ def scheduled():
     msg = "scheduled. ran at "+datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S%z')
     print(msg)
     #Log.register(data=msg)
+
+
+@manager.command
+def test_mandrill():
+    send_test_email()
 
 
 migrate = Migrate(app, db)
