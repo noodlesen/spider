@@ -2,7 +2,7 @@ from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 from spider import app
 from spider.db import db
-from spider.requester import request_destination
+from spider.requester import request_destination, expose
 from time import sleep
 from random import randint
 from datetime import datetime
@@ -35,7 +35,7 @@ after_next_month_start = plus_month(this_month_start,2)
 def preload():
     destinations = [p for p in db.engine.execute("""SELECT name, code, country, score FROM destination""")]
     n=0
-    while n<200:
+    while n<2:
         #random_request( destinations)
         destination = destinations[randint(0, len(destinations)-1)]
 
@@ -62,6 +62,8 @@ def preload():
         # db.session.commit()
         n+=1
 
+    expose(50, 1)
+
 @manager.command
 def scheduled():
     msg = "scheduled. ran at "+datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S%z')
@@ -72,6 +74,11 @@ def scheduled():
 @manager.command
 def test_mandrill():
     send_test_email()
+
+
+@manager.command
+def test_expose():
+    expose(50, 1)
 
 
 migrate = Migrate(app, db)

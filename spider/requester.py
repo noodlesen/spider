@@ -24,6 +24,39 @@ def bid_cleanup(d):
     db.engine.execute(""" DELETE FROM bid WHERE departure_date<='%s' """ % today)
     db.engine.execute(""" DELETE FROM bid WHERE departure_date=return_date """)
 
+
+def get_bid_rating(bid, i, score):
+    k = 2 if bid.one_way =="false" else 1
+    now = datetime.now()
+    td = bid.departure_date - now
+    days_to = td.days
+    rating = int(bid.distance*2/bid.price*1000*k/(bid.stops+1)+score/10)-days_to-2**i if i<=10 else 0
+    lim_low = int(bid.distance/400)
+    lim_high = int(bid.distance/200)
+    dur = (bid.return_date - bid.departure_date).days
+    pen_days=0
+    if dur > lim_high:
+        pen_days = dur-lim_high
+    elif dur<lim_low:
+        pen_days=lim_low-dur
+    rating-=pen_days*5
+    return rating
+
+def expose(total_lim, each_lim ):
+    bids = list(db.engine.execute("""SELECT id, rating, destination FROM bid WHERE rating>0 ORDER BY rating DESC LIMIT 1000 """))
+    dests = {}
+    selected = []
+    for b in bids:
+        if b[2] not in dests and len(selected)< total_lim:
+            dests[b[2]] = 1
+            selected.append(str(b[0]))
+        elif b[2] in dests and dests[b[2]]<each_lim and len(selected)< total_lim:
+            dests[b[2]]+=1
+            selected.append(str(b[0]))
+    ss = ', '.join(selected)
+    db.engine.execute("""UPDATE bid SET to_expose=1 WHERE id IN (%s)""" % ss)
+    db.engine.execute("""UPDATE bid SET to_expose=0 WHERE id NOT IN (%s)""" % ss)
+
 #=======================
 def request_destination(destination, start_dt, check_time=True):
     bid_cleanup(2)
@@ -119,28 +152,34 @@ def request_destination(destination, start_dt, check_time=True):
                 bid.found_at = found_at
 
                 bid.snapshot = snapshot
-                k = 2 if bid.one_way =="false" else 1
-                now = datetime.now()
-                td = bid.departure_date - now
-                days_to = td.days
-                rating = int(bid.distance/bid.price*1000*k/(bid.stops+1)+score/10)-days_to-2**i if i<=10 else 0
-                lim_low = int(bid.distance/400)
-                lim_high = int(bid.distance/200)
-                dur = (bid.return_date - bid.departure_date).days
-                pen_days=0
-                if dur > lim_high:
-                    pen_days = dur-lim_high
-                elif dur<lim_low:
-                    pen_days=lim_low-dur
-                rating-=pen_days*5
-                bid.rating = rating
-                bid.to_expose = True if i==0 else False
+
+
+                # k = 2 if bid.one_way =="false" else 1
+                # now = datetime.now()
+                # td = bid.departure_date - now
+                # days_to = td.days
+                # rating = int(bid.distance*2/bid.price*1000*k/(bid.stops+1)+score/10)-days_to-2**i if i<=10 else 0
+                # lim_low = int(bid.distance/400)
+                # lim_high = int(bid.distance/200)
+                # dur = (bid.return_date - bid.departure_date).days
+                # pen_days=0
+                # if dur > lim_high:
+                #     pen_days = dur-lim_high
+                # elif dur<lim_low:
+                #     pen_days=lim_low-dur
+                # rating-=pen_days*5
+
+                #bid.rating = rating
+
+                bid.rating = get_bid_rating(bid, i, score)
+
+                bid.to_expose = 0 #True if i==0 else False
                 print(bid.found_at)
 
                 db.session.add(bid)
                 db.session.commit()
 
-            i+=1
+                i+=1
 
     new_bid_count = stat.total_bid_count+sum_bids
     if new_bid_count >0:
