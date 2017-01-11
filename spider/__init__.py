@@ -198,6 +198,34 @@ def save_email():
     return json.dumps({"success": success})
 
 
+@app.route('/unsubscribe', methods=['GET'])
+def unsubscribe():
+
+    def check_subscriber(hsh):
+        q = list(db.engine.execute("""SELECT id, email FROM subscribers WHERE hash="%s" """ % hsh ))
+        res = {'exists': len(q) > 0}
+        if res['exists']:
+            res['email']=q[0][1]
+        return res
+
+    success=False
+    email=''
+    hsh = request.args.get('ref')
+
+    check_res = check_subscriber(hsh)
+    if check_res['exists']:
+        email = check_res['email']
+        db.engine.execute(""" DELETE FROM subscribers WHERE hash="%s" """ % hsh)
+        check_res = check_subscriber(hsh)
+        if not check_res['exists']:
+            success = True
+
+    return render_template('unsubscribed.html', success=success, email = email)
+
+
+
+
+
 
 @app.template_filter('nl2br')
 def nl2br(value):

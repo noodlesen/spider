@@ -1,6 +1,6 @@
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
-from spider import app
+from spider import app, bid_feed
 from spider.db import db
 from spider.requester import request_destination, expose
 from time import sleep
@@ -8,8 +8,9 @@ from random import randint
 from datetime import datetime
 from spider.logger import Log
 from math import floor
+from spider.toolbox import get_hash
 
-from spider.mandrill import send_test_email
+from spider.mandrill import send_prices_email
 
 manager = Manager(app)
 
@@ -35,7 +36,7 @@ after_next_month_start = plus_month(this_month_start,2)
 def preload():
     destinations = [p for p in db.engine.execute("""SELECT name, code, country, score FROM destination""")]
     n=0
-    while n<2:
+    while n<200:
         #random_request( destinations)
         destination = destinations[randint(0, len(destinations)-1)]
 
@@ -73,12 +74,19 @@ def scheduled():
 
 @manager.command
 def test_mandrill():
-    send_test_email()
+    send_prices_email(bid_feed())
 
 
 @manager.command
 def test_expose():
     expose(50, 1)
+
+@manager.command
+def make_hash():
+    subs = list(db.engine.execute("""SELECT id, marker FROM subscribers"""))
+    for s in subs:
+        hsh = get_hash(s[1])
+        db.engine.execute("""UPDATE subscribers SET hash="%s" WHERE id=%d """ % (hsh, s[0]))
 
 
 migrate = Migrate(app, db)
