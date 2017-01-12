@@ -74,7 +74,7 @@ def scheduled():
 
 @manager.command
 def test_mandrill():
-    send_prices_email(bid_feed())
+    send_prices_email(bid_feed(), "fcb2ce1ebdccf90be8056a33101754c1")
 
 
 @manager.command

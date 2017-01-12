@@ -9,7 +9,7 @@ from email.mime.text import MIMEText
 
 from .config import MANDRILL_USERNAME, MANDRILL_PASSWORD
 
-def send_prices_email(prices):
+def send_prices_email(prices, hsh):
 
     msg = MIMEMultipart('alternative')
 
@@ -17,10 +17,10 @@ def send_prices_email(prices):
     msg['From']    = "Fly From Moscow <price@flyfrom.moscow>" # Your from name and email address
     msg['To']      = "k.lapshov@gmail.com"
 
-    text = "Mandrill speaks plaintext"
+    text = "К сожалению, рассылка лучших цен на авиабилеты FLYFROM.MOSCOW поддерживает только HTML формат письма"
     part1 = MIMEText(text, 'plain')
 
-    html = transform(render_template('letter.html', prices=json.loads(prices)['bids'])) # "<em>Mandrill speaks <strong>HTML</strong></em>"
+    html = transform(render_template('letter.html', prices=json.loads(prices)['bids'], hsh=hsh)) # "<em>Mandrill speaks <strong>HTML</strong></em>"
     part2 = MIMEText(html, 'html')
 
 
