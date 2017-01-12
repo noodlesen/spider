@@ -22,7 +22,7 @@ from .models import Bid, Ask, UserQuery, DestinationStats
 
 #from .requester import random_request
 
-from .toolbox import russian_plurals
+from .toolbox import russian_plurals, get_hash
 
 
 app = Flask(__name__)
@@ -184,29 +184,31 @@ def bid_feed():
 #    return json.dumps({'success':True})
 
 
+def check_subscriber(hsh):
+    q = list(db.engine.execute("""SELECT id, email FROM subscribers WHERE hash="%s" """ % hsh ))
+    res = {'exists': len(q) > 0}
+    if res['exists']:
+        res['email']=q[0][1]
+    return res
+
+
 @app.route('/save-email', methods=['POST'])
 def save_email():
+
+    success=False
     q = request.json
+
     if q['email']!='' and '@' in q['email'] and '.' in q['email']:
-        #try:
-        db.engine.execute("""INSERT INTO subscribers (`email`, `marker`) VALUES ("%s", "%s")""" % (q['email'], session['marker']))
-        # except:
-        #     pass
+        hsh = get_hash(q['email'])
+        if not check_subscriber(hsh)['exists']:
+            db.engine.execute("""INSERT INTO subscribers (`email`, `marker`, `hash`) VALUES ("%s", "%s", "%s")""" % (q['email'], session['marker'], hsh) )
         success = True
-    else:
-        success = False
+
     return json.dumps({"success": success})
 
 
 @app.route('/unsubscribe', methods=['GET'])
 def unsubscribe():
-
-    def check_subscriber(hsh):
-        q = list(db.engine.execute("""SELECT id, email FROM subscribers WHERE hash="%s" """ % hsh ))
-        res = {'exists': len(q) > 0}
-        if res['exists']:
-            res['email']=q[0][1]
-        return res
 
     success=False
     email=''
