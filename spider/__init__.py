@@ -23,6 +23,7 @@ from .models import Bid, Ask, UserQuery, DestinationStats
 #from .requester import random_request
 
 from .toolbox import russian_plurals, get_hash
+from .mandrill import send_confirmation_email, send_prices_email
 
 
 app = Flask(__name__)
@@ -203,6 +204,7 @@ def save_email():
         if not check_subscriber(hsh)['exists']:
             db.engine.execute("""INSERT INTO subscribers (`email`, `marker`, `hash`) VALUES ("%s", "%s", "%s")""" % (q['email'], session['marker'], hsh) )
         success = True
+        send_confirmation_email(q['email'], bid_feed())
 
     return json.dumps({"success": success})
 
