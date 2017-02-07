@@ -9,6 +9,8 @@ from email.mime.text import MIMEText
 
 from .config import MANDRILL_USERNAME, MANDRILL_PASSWORD
 
+from .db import db
+
 
 def send_prices_email(prices, hsh):
 
@@ -39,30 +41,37 @@ def send_prices_email(prices, hsh):
     s.quit()
 
 
-def send_confirmation_email(prices, hsh):
+def send_confirmation_email(email, prices):
 
-    msg = MIMEMultipart('alternative')
+    qhsh = list(db.engine.execute("""SELECT hash FROM subscribers WHERE email="%s" """ % email))
 
-    msg['Subject'] = "Подтверждение адреса — рассылка лучших цен на авиабилеты Fly From Moscow"
-    msg['From']    = "Fly From Moscow <price@flyfrom.moscow>" # Your from name and email address
-    msg['To']      = "k.lapshov@gmail.com"
+    if len(qhsh)>0:
 
-    text = "К сожалению, рассылка лучших цен на авиабилеты FLYFROM.MOSCOW поддерживает только HTML формат письма"
-    part1 = MIMEText(text, 'plain')
+        hsh=qhsh[0][0]
 
-    html = transform(render_template('confirmation_letter.html', prices=json.loads(prices)['bids'], hsh=hsh)) # "<em>Mandrill speaks <strong>HTML</strong></em>"
-    part2 = MIMEText(html, 'html')
+        msg = MIMEMultipart('alternative')
+
+        msg['Subject'] = "Подтверждение адреса — рассылка лучших цен на авиабилеты Fly From Moscow"
+        msg['From']    = "Fly From Moscow <price@flyfrom.moscow>" # Your from name and email address
+        msg['To']      = email
+
+        text = "К сожалению, рассылка лучших цен на авиабилеты FLYFROM.MOSCOW поддерживает только HTML формат письма"
+        part1 = MIMEText(text, 'plain')
+
+        html = transform(render_template('confirmation_letter.html', prices=json.loads(prices)['bids'], hsh=hsh)) # "<em>Mandrill speaks <strong>HTML</strong></em>"
+        part2 = MIMEText(html, 'html')
 
 
-    username = MANDRILL_USERNAME # os.environ['MANDRILL_USERNAME']
-    password = MANDRILL_PASSWORD # os.environ['MANDRILL_PASSWORD']
+        username = MANDRILL_USERNAME # os.environ['MANDRILL_USERNAME']
+        password = MANDRILL_PASSWORD # os.environ['MANDRILL_PASSWORD']
 
-    msg.attach(part1)
-    msg.attach(part2)
+        msg.attach(part1)
+        msg.attach(part2)
 
-    s = smtplib.SMTP('smtp.mandrillapp.com', 587)
+        s = smtplib.SMTP('smtp.mandrillapp.com', 587)
 
-    s.login(username, password)
-    s.sendmail(msg['From'], msg['To'], msg.as_string())
+        s.login(username, password)
+        s.sendmail(msg['From'], msg['To'], msg.as_string())
 
-    s.quit()
+        s.quit()
+

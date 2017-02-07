@@ -230,6 +230,8 @@ def confirm():
     success=False
     email=''
     hsh = request.args.get('ref')
+    print ("CONFIRMATION")
+    print ("hsh: ", hsh)
     n = list(db.engine.execute("""SELECT id, email FROM subscribers WHERE hash="%s" """ % hsh))
     if n:
         db.engine.execute(""" UPDATE subscribers SET confirmed=1 WHERE id=%d""" % n[0][0])
