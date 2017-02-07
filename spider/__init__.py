@@ -225,8 +225,17 @@ def unsubscribe():
     return render_template('unsubscribed.html', success=success, email = email)
 
 
-
-
+@app.route('/confirm', methods=['GET'])
+def confirm():
+    success=False
+    email=''
+    hsh = request.args.get('ref')
+    n = list(db.engine.execute("""SELECT id, email FROM subscribers WHERE hash="%s" """ % hsh))
+    if n:
+        db.engine.execute(""" UPDATE subscribers SET confirmed=1 WHERE id=%d""" % n[0][0])
+        email=n[0][1]
+        success=True
+    return render_template('confirmed.html', success=success, email=email)
 
 
 @app.template_filter('nl2br')

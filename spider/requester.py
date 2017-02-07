@@ -12,11 +12,6 @@ from .toolbox import get_hash, fib, chances
 
 
 
-
-
-
-
-
 def bid_cleanup(d):
     today = datetime.today()
     last = today - timedelta(d)

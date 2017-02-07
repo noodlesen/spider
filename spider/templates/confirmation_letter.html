@@ -3,7 +3,7 @@
   <head>
     <meta name="viewport" content="width=device-width" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>FLYFROM.MOSCOW - ежедневный обзор лучших цен на авиабилеты из Москвы</title>
+    <title>FLYFROM.MOSCOW - подтверждение подписки</title>
     <style>
       /* -------------------------------------
           GLOBAL RESETS
@@ -25,6 +25,7 @@
         -webkit-text-size-adjust: 100%; }
 
       table {
+        text-align: center;
         border-collapse: separate;
         mso-table-lspace: 0pt;
         mso-table-rspace: 0pt;
@@ -286,13 +287,9 @@
                   <table border="0" cellpadding="0" cellspacing="0">
                     <tr>
                       <td>
-                        <h1>Самые дешевые авиабилеты от FLYFROM.MOSCOW</h1>
-                        <p>Hi there,</p>
-                        {% for p in prices %}
-                          <h2>{{p['destination']}} {{p['dest_name']}} — {{p['price']}}р</h2>
-                          <p>{{p['departure_date']}} - {{p['return_date']}} ({{p['days']}}) — {{p['stops']}}</p>
-                        {% endfor %}
-<!--                         <p>Sometimes you just want to send a simple HTML email with a simple design and clear call to action. This is it.</p>
+                        <h1>Здравствуйте!</h1>
+                        <h2>Мы готовы начать нашу рассылку самых интересных предложений по авиабилетам из Москвы, нам нужно лишь ваше подтверждение. Для этого просто нажмите кнопку "Подтвердить адрес"</h2>
+                        <br>
                         <table border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
                           <tbody>
                             <tr>
@@ -300,7 +297,7 @@
                                 <table border="0" cellpadding="0" cellspacing="0">
                                   <tbody>
                                     <tr>
-                                      <td> <a href="http://htmlemail.io" target="_blank">Call To Action</a> </td>
+                                      <td> <a href="http://flyfrom.moscow/confirm?ref={{hsh}}" target="_blank">Подтвердить адрес</a> </td>
                                     </tr>
                                   </tbody>
                                 </table>
@@ -308,8 +305,12 @@
                             </tr>
                           </tbody>
                         </table>
-                        <p>This is a really simple email template. Its sole purpose is to get the recipient to click the button with no distractions.</p>
-                        <p>Good luck! Hope it works.</p> -->
+                        <br>
+                          <p>Если вам не понравится наша рассылка вы можете отписаться в любой момент</p>
+                          <p>Вы получили это письмо потому что вы или кто-то из ваших недоброжелателей оставил этот адрес на сайте <a href="http://flyfrom.moscow">Fly From Moscow</a> :)<br/>
+                        Если вы этого не делали, просто проигнорируйте это письмо</p>
+                        
+
                       </td>
                     </tr>
                   </table>
@@ -323,16 +324,11 @@
             <div class="footer">
               <table border="0" cellpadding="0" cellspacing="0">
                 <tr>
-                  <td class="content-block">
+<!--                   <td class="content-block">
                     <span class="apple-link">FLYFROM.MOSCOW 2017 Данные предоставлены <a href="http://aviasales.ru">Aviasales</a></span>
                     <br><a href="{{url_for('unsubscribe', _external=True)}}?ref={{hsh}}">ОТПИСАТЬСЯ ОТ ЕЖЕДНЕВНОЙ РАССЫЛКИ</a>.
-                  </td>
+                  </td> -->
                 </tr>
-   <!--              <tr>
-                  <td class="content-block powered-by">
-                    Powered by <a href="http://htmlemail.io">HTMLemail</a>.
-                  </td>
-                </tr> -->
               </table>
             </div>
 

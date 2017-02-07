@@ -9,8 +9,9 @@ from datetime import datetime
 from spider.logger import Log
 from math import floor
 from spider.toolbox import get_hash
+from spider.raccoon import lookup
 
-from spider.mandrill import send_prices_email
+from spider.mandrill import send_prices_email, send_confirmation_email
 
 manager = Manager(app)
 
@@ -74,7 +75,7 @@ def scheduled():
 
 @manager.command
 def test_mandrill():
-    send_prices_email(bid_feed(), "fcb2ce1ebdccf90be8056a33101754c1")
+    send_confirmation_email(bid_feed(), "fcb2ce1ebdccf90be8056a33101754c1")
 
 
 @manager.command
@@ -87,6 +88,10 @@ def make_hash():
     for s in subs:
         hsh = get_hash(s[1])
         db.engine.execute("""UPDATE subscribers SET hash="%s" WHERE id=%d """ % (hsh, s[0]))
+
+@manager.command
+def raccoon():
+    lookup(destinations=['VRN'], maxprice=10000)
 
 
 migrate = Migrate(app, db)

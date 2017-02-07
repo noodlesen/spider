@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}{% endblock %}
+
+{% block styles %}
+{{ super() }}
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/common.css') }}">
+{% endblock %}
+
+{% block navbar %}
+{% endblock %}
+{% block page_content %}
+{% if success %}
+    <h1 class="center-label">Ура!</h1>
+    <p class="center-sub-label">Ваш адрес {{email}} успешно добавлен в лист рассылки</p>
+    <p class="center-sub-label">Отписаться вы сможете в любой момент, перейдя по ссылке в конце письма</p>
+{% else %}
+    <h1 class="center-label">Что-то пошло не так :(</h1>
+    <p class="center-sub-label">Не волнуйтесь, отчет об ошибке уже отправлен администратору, и мы обязательно выполним ваш запрос</p>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}
