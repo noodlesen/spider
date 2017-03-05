@@ -47,6 +47,8 @@ def send_prices_email(email, prices):
         s.quit()
 
 
+
+
 def send_confirmation_email(email, prices):
 
     qhsh = list(db.engine.execute("""SELECT hash FROM subscribers WHERE email="%s" """ % email))
@@ -80,4 +82,6 @@ def send_confirmation_email(email, prices):
         s.sendmail(msg['From'], msg['To'], msg.as_string())
 
         s.quit()
+
+        db.engine.execute("""UPDATE subscribers SET confirm_requested = 1 WHERE email = "%s" """ % email)
 

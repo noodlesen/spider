@@ -11,9 +11,8 @@
 {% endblock %}
 {% block page_content %}
 {% if success %}
-    <h1 class="center-label">Ура!</h1>
-    <p class="center-sub-label">Ваш адрес {{email}} успешно добавлен в лист рассылки</p>
-    <p class="center-sub-label">Отписаться вы сможете в любой момент, перейдя по ссылке в конце письма</p>
+    <h1 class="center-label">Частота подписки успешно изменена</h1>
+    <p class="center-sub-label">Теперь вы будете получать эту рассылку 1 раз в {{f}} {{days}}</p>
 {% else %}
     <h1 class="center-label">Что-то пошло не так :(</h1>
     <p class="center-sub-label">Не волнуйтесь, отчет об ошибке уже отправлен администратору, и мы обязательно выполним ваш запрос</p>

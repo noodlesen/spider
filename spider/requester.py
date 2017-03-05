@@ -99,82 +99,87 @@ def request_destination(destination, start_dt, check_time=True):
 
         print("proceed...")
 
-        stat.requested_at = datetime.utcnow()
+        try:
 
-        #====
-        month_bids = get_month_bids({"beginning_of_period": start_dt.strftime('%Y-%m-%d'), "destination": destination[1], "origin":"MOW" })
-        #====
+            stat.requested_at = datetime.utcnow()
 
-
-
-        dest_name = destination[0]
-        score = destination[3]
-        i=0
-        bids_count = len(month_bids['data'])
-
-        stat.results_count = bids_count
+            #====
+            month_bids = get_month_bids({"beginning_of_period": start_dt.strftime('%Y-%m-%d'), "destination": destination[1], "origin":"MOW" })
+            #====
 
 
-        for b in month_bids['data']:
-            destination = b['destination']
-            found_at = datetime.strptime( ':'.join(b['found_at'].split(':')[:-1])+'00', '%Y-%m-%dT%H:%M:%S%z')
-            departure_date = datetime.strptime( b['depart_date'],'%Y-%m-%d')
-            price = b['value']
 
-            # check if the bid is unique
-            snapshot = get_hash(destination+str(price)+str(departure_date))
-            snap_count = len(list(db.engine.execute("""SELECT id FROM bid WHERE snapshot="%s" """ % snapshot)))
-            print("snapcount "+str(snap_count))
+            dest_name = destination[0]
+            score = destination[3]
+            i=0
+            bids_count = len(month_bids['data'])
 
-            if snap_count ==0:
-
-                print (destination, price)
-                bid = Bid()
-                bid.origin = b['origin']
-                bid.destination = destination
-                bid.dest_name = dest_name.upper()
-                bid.one_way = month_bids['params']['one_way']
-                bid.price = price
-                sum_price += price
-                sum_bids += 1
-                bid.trip_class = b['trip_class']
-                bid.stops = b['number_of_changes']
-                bid.distance = b['distance']
-                bid.departure_date = departure_date
-                if 'return_date' in b.keys():
-                    bid.return_date = datetime.strptime( b['return_date'], '%Y-%m-%d')
-
-                bid.found_at = found_at
-
-                bid.snapshot = snapshot
+            stat.results_count = bids_count
 
 
-                # k = 2 if bid.one_way =="false" else 1
-                # now = datetime.now()
-                # td = bid.departure_date - now
-                # days_to = td.days
-                # rating = int(bid.distance*2/bid.price*1000*k/(bid.stops+1)+score/10)-days_to-2**i if i<=10 else 0
-                # lim_low = int(bid.distance/400)
-                # lim_high = int(bid.distance/200)
-                # dur = (bid.return_date - bid.departure_date).days
-                # pen_days=0
-                # if dur > lim_high:
-                #     pen_days = dur-lim_high
-                # elif dur<lim_low:
-                #     pen_days=lim_low-dur
-                # rating-=pen_days*5
+            for b in month_bids['data']:
+                destination = b['destination']
+                found_at = datetime.strptime( ':'.join(b['found_at'].split(':')[:-1])+'00', '%Y-%m-%dT%H:%M:%S%z')
+                departure_date = datetime.strptime( b['depart_date'],'%Y-%m-%d')
+                price = b['value']
 
-                #bid.rating = rating
+                # check if the bid is unique
+                snapshot = get_hash(destination+str(price)+str(departure_date))
+                snap_count = len(list(db.engine.execute("""SELECT id FROM bid WHERE snapshot="%s" """ % snapshot)))
+                print("snapcount "+str(snap_count))
 
-                bid.rating = get_bid_rating(bid, i, score)
+                if snap_count ==0:
 
-                bid.to_expose = 0 #True if i==0 else False
-                print(bid.found_at)
+                    print (destination, price)
+                    bid = Bid()
+                    bid.origin = b['origin']
+                    bid.destination = destination
+                    bid.dest_name = dest_name.upper()
+                    bid.one_way = month_bids['params']['one_way']
+                    bid.price = price
+                    sum_price += price
+                    sum_bids += 1
+                    bid.trip_class = b['trip_class']
+                    bid.stops = b['number_of_changes']
+                    bid.distance = b['distance']
+                    bid.departure_date = departure_date
+                    if 'return_date' in b.keys():
+                        bid.return_date = datetime.strptime( b['return_date'], '%Y-%m-%d')
 
-                db.session.add(bid)
-                db.session.commit()
+                    bid.found_at = found_at
 
-                i+=1
+                    bid.snapshot = snapshot
+
+
+                    # k = 2 if bid.one_way =="false" else 1
+                    # now = datetime.now()
+                    # td = bid.departure_date - now
+                    # days_to = td.days
+                    # rating = int(bid.distance*2/bid.price*1000*k/(bid.stops+1)+score/10)-days_to-2**i if i<=10 else 0
+                    # lim_low = int(bid.distance/400)
+                    # lim_high = int(bid.distance/200)
+                    # dur = (bid.return_date - bid.departure_date).days
+                    # pen_days=0
+                    # if dur > lim_high:
+                    #     pen_days = dur-lim_high
+                    # elif dur<lim_low:
+                    #     pen_days=lim_low-dur
+                    # rating-=pen_days*5
+
+                    #bid.rating = rating
+
+                    bid.rating = get_bid_rating(bid, i, score)
+
+                    bid.to_expose = 0 #True if i==0 else False
+                    print(bid.found_at)
+
+                    db.session.add(bid)
+                    db.session.commit()
+
+                    i+=1
+        except:
+            print ('EXCEPTION')
+            pass
 
     new_bid_count = stat.total_bid_count+sum_bids
     if new_bid_count >0:

@@ -12,15 +12,12 @@ from flask_wtf.csrf import CsrfProtect
 import json
 from datetime import datetime, timedelta
 
-
 from .cache import cache
 from .db import db
 from .config import DEBUG, SECRET_KEY, DBURI, MAINTENANCE, PROJECT_NAME, MAIL_SERVER, MAIL_PORT, MAIL_USE_TLS, MAIL_USE_SSL, MAIL_USERNAME, MAIL_PASSWORD, ALLOW_ROBOTS
 from .logger import Log
 
 from .models import Bid, Ask, UserQuery, DestinationStats
-
-#from .requester import random_request
 
 from .toolbox import russian_plurals, get_hash
 from .mandrill import send_confirmation_email, send_prices_email
@@ -153,36 +150,12 @@ def bid_feed():
         print(b[2])
         nb['days']=str(dayz)+" "+russian_plurals('день', dayz)
 
-        # MAX_AGE= 3600*24
-        # age_prc = nb['age']/MAX_AGE
-        # g=hex(int(255-120*age_prc))[2:]
-        # r=hex(int(128*age_prc))[2:]
-        # bc=hex(int(96*age_prc))[2:]
-        # r = "0"+r if len(r)<2 else r
-        # g = "0"+g if len(g)<2 else g
-        # bc = "0"+bc if len(bc)<2 else bc
-        # nb['age_color']="#"+r+g+bc
-
         tpurl="http://aviasales.ru/?marker=14721&origin_iata=MOW"
         nb['href']=tpurl+"&destination_iata=%s&depart_date=%s&return_date=%s" % (nb['destination'],dd_url, rd_url)
-        #nb['special'] = True if nb['price']<10000 else False
         nb['special'] = True if nb['price']<0.66*b[8] else False
         res['bids'].append(nb)
 
     return json.dumps(res)
-
-
-#@app.route('/pulse', methods = ['POST'])
-#def pulse():
-#    res={}
-#    print ('ACCEPTED '+str(datetime.utcnow()))
-#    if (datetime.utcnow()-DestinationStats.last_request_time()).seconds<7:
-#        res['success']=False
-#        print ("Too early for any request - skip")
-#    else:
-#        destinations = [p for p in db.engine.execute("""SELECT name, code, country, score FROM destination""")]
-#        random_request(destinations)
-#    return json.dumps({'success':True})
 
 
 def check_subscriber(hsh):
@@ -203,8 +176,9 @@ def save_email():
         hsh = get_hash(q['email'])
         if not check_subscriber(hsh)['exists']:
             db.engine.execute("""INSERT INTO subscribers (`email`, `marker`, `hash`) VALUES ("%s", "%s", "%s")""" % (q['email'], session['marker'], hsh) )
+            send_confirmation_email(q['email'], bid_feed())
         success = True
-        send_confirmation_email(q['email'], bid_feed())
+        
 
     return json.dumps({"success": success})
 
@@ -240,6 +214,23 @@ def confirm():
         email=n[0][1]
         success=True
     return render_template('confirmed.html', success=success, email=email)
+
+
+@app.route('/change-rate', methods=['GET'])
+def change_rate():
+    f = int(request.args.get('f'))
+    hsh = request.args.get('ref')
+    if check_subscriber(hsh)['exists'] and f in range(1,31):
+        db.engine.execute("""UPDATE subscribers SET frequency=%d WHERE hash="%s" """ % (f, hsh))
+        success=True
+    else:
+        print(hsh)
+        print(check_subscriber(hsh)['exists'])
+        print (f)
+        success=False
+    return render_template('rate_changed.html', f=f, success=success, days=russian_plurals('день', f))
+
+#-------------------------------------------- 
 
 
 @app.template_filter('nl2br')
