@@ -40,7 +40,7 @@ def preload():
     n=0
     while n<200:
 
-        if (datetime.now()-start_time).seconds>20:
+        if (datetime.now()-start_time).seconds>3300:
             print ("reached time limit")
             break
 
