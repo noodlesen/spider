@@ -35,9 +35,15 @@ after_next_month_start = plus_month(this_month_start,2)
 
 @manager.command
 def preload():
+    start_time = datetime.now()
     destinations = [p for p in db.engine.execute("""SELECT name, code, country, score FROM destination""")]
     n=0
     while n<200:
+
+        if (datetime.now()-start_time).seconds>20:
+            print ("reached time limit")
+            break
+
         #random_request( destinations)
         destination = destinations[randint(0, len(destinations)-1)]
 
