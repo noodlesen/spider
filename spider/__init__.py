@@ -175,7 +175,9 @@ def save_email():
     if q['email']!='' and '@' in q['email'] and '.' in q['email']:
         hsh = get_hash(q['email'])
         if not check_subscriber(hsh)['exists']:
-            db.engine.execute("""INSERT INTO subscribers (`email`, `marker`, `hash`) VALUES ("%s", "%s", "%s")""" % (q['email'], session['marker'], hsh) )
+            db.engine.execute("""INSERT INTO subscribers (`email`, `marker`, `hash`, `last_mail_sent_at`) VALUES ("%s", "%s", "%s", "%s")"""
+                                 % (q['email'], session['marker'], hsh, datetime.now().strftime('%Y-%m-%d %H:%M:%S%z'))
+            )
             send_confirmation_email(q['email'], bid_feed())
         success = True
         

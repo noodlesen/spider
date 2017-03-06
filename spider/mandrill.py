@@ -3,6 +3,7 @@ import smtplib
 import json
 from premailer import transform
 from flask import render_template
+from datetime import datetime
 
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -14,9 +15,11 @@ from .db import db
 
 def send_prices_email(email, prices):
 
-    qhsh = list(db.engine.execute("""SELECT hash FROM subscribers WHERE email="%s" """ % email))
+    qhsh = list(db.engine.execute("""SELECT hash, last_mail_sent_at FROM subscribers WHERE email="%s" """ % email))
 
-    if len(qhsh)>0:
+    if len(qhsh)>0 and qhsh[0][1] and (datetime.now().replace(microsecond=0) - qhsh[0][1]).seconds>7200:
+
+        print ("SECONDS: ", (datetime.now().replace(microsecond=0) - qhsh[0][1]).seconds)
 
         hsh=qhsh[0][0]
 
@@ -45,6 +48,10 @@ def send_prices_email(email, prices):
         s.sendmail(msg['From'], msg['To'], msg.as_string())
 
         s.quit()
+
+        db.engine.execute("""UPDATE subscribers SET last_mail_sent_at="%s" WHERE hash="%s" """ 
+                          % (datetime.now().strftime('%Y-%m-%d %H:%M:%S%z'), hsh)
+        )
 
 
 

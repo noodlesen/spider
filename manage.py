@@ -81,7 +81,8 @@ def scheduled():
 
 @manager.command
 def test_mandrill():
-    send_confirmation_email("k.lapshov@gmail.com", bid_feed())
+    #send_confirmation_email("k.lapshov@gmail.com", bid_feed())
+    send_prices_email("k.lapshov@gmail.com", bid_feed())
 
 
 @manager.command
