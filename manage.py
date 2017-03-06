@@ -32,6 +32,7 @@ next_month_start = plus_month(this_month_start,1)
 after_next_month_start = plus_month(this_month_start,2)
 
 
+DELAY = 2 #sec
 
 @manager.command
 def preload():
@@ -50,20 +51,20 @@ def preload():
         print()
         print('THIS')
         request_destination(destination, this_month_start)
-        print ('SLEEPING', 3)
-        sleep(3)
+        print ('SLEEPING', DELAY)
+        sleep(DELAY)
 
         print()
         print('NEXT')
         request_destination(destination, next_month_start, False)
-        print ('SLEEPING', 3)
-        sleep(3)
+        print ('SLEEPING', DELAY)
+        sleep(DELAY)
 
         print()
         print('AFTER')
         request_destination(destination, after_next_month_start, False)
-        print ('SLEEPING', 3)
-        sleep(3)
+        print ('SLEEPING', DELAY)
+        sleep(DELAY)
 
         # stat.requested_at = datetime.utcnow()
         # db.session.add(stat)
