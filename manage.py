@@ -32,38 +32,38 @@ next_month_start = plus_month(this_month_start,1)
 after_next_month_start = plus_month(this_month_start,2)
 
 
-DELAY = 3 #sec
+DELAY = 4 #sec
 
 @manager.command
-def preload():
+def load():
     start_time = datetime.now()
     destinations = [p for p in db.engine.execute("""SELECT name, code, country, score FROM destination""")]
     n=0
     while n<200:
 
         if (datetime.now()-start_time).seconds>3000:
-            pass#print ("reached time limit")
+            print ("reached time limit")
             break
 
         #random_request( destinations)
         destination = destinations[randint(0, len(destinations)-1)]
 
-        pass#print()
-        pass#print('THIS')
+        print()
+        print('THIS')
         request_destination(destination, this_month_start)
-        pass#print ('SLEEPING', DELAY)
+        print ('SLEEPING', DELAY)
         sleep(DELAY)
 
-        pass#print()
-        pass#print('NEXT')
+        print()
+        print('NEXT')
         request_destination(destination, next_month_start, False)
-        pass#print ('SLEEPING', DELAY)
+        print ('SLEEPING', DELAY)
         sleep(DELAY)
 
-        pass#print()
-        pass#print('AFTER')
+        print()
+        print('AFTER')
         request_destination(destination, after_next_month_start, False)
-        pass#print ('SLEEPING', DELAY)
+        print ('SLEEPING', DELAY)
         sleep(DELAY)
 
         # stat.requested_at = datetime.utcnow()
@@ -76,7 +76,7 @@ def preload():
 @manager.command
 def scheduled():
     msg = "scheduled. ran at "+datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S%z')
-    pass#print(msg)
+    print(msg)
     #Log.register(data=msg)
 
 

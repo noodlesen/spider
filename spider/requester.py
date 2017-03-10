@@ -57,15 +57,15 @@ def expose(total_lim, each_lim ):
 def request_destination(destination, start_dt, check_time=True):
     bid_cleanup(2)
     #destination = destinations[randint(0, len(destinations)-1)]
-    pass#print()
-    pass#print(datetime.utcnow())
-    pass#print ('REQUESTING %s' % destination[0])
+    print()
+    print(datetime.utcnow())
+    print ('REQUESTING %s' % destination[0])
     #-----------------------------------------
 
     allowed=False
     stat = DestinationStats.query.filter_by(code=destination[1]).first()
     if not stat:
-        pass#print("stat not exists")
+        print("stat not exists")
         stat = DestinationStats()
         stat.code = destination[1]
         stat.total_bid_count = 0
@@ -74,20 +74,20 @@ def request_destination(destination, start_dt, check_time=True):
         allowed = True
 
     else:
-        pass#print("stat exists")
+        print("stat exists")
         days_to_last_request = (datetime.utcnow()-stat.requested_at).days
         if stat.results_count==0:
-            pass#print("no results last time")
+            print("no results last time")
             allowed = chances(10)
-            pass#print("allowed ", allowed)
+            print("allowed ", allowed)
         elif days_to_last_request >= 1:
-            pass#print ('Last request is older than 24h - %d OK' % days_to_last_request)
+            print ('Last request is older than 24h - %d OK' % days_to_last_request)
             allowed=True
 
         else:
             if check_time:
                 pass
-                pass#print ('Too early for this request - next time', days_to_last_request)
+                print ('Too early for this request - next time', days_to_last_request)
             else:
                 allowed = True
 
@@ -99,7 +99,7 @@ def request_destination(destination, start_dt, check_time=True):
 
     if allowed:
 
-        pass#print("proceed...")
+        print("proceed...")
 
         try:
 
@@ -128,11 +128,11 @@ def request_destination(destination, start_dt, check_time=True):
                 # check if the bid is unique
                 snapshot = get_hash(destination+str(price)+str(departure_date))
                 snap_count = len(list(db.engine.execute("""SELECT id FROM bid WHERE snapshot="%s" """ % snapshot)))
-                pass#print("snapcount "+str(snap_count))
+                print("snapcount "+str(snap_count))
 
                 if snap_count ==0:
 
-                    pass#print (destination, price)
+                    print (destination, price)
                     bid = Bid()
                     bid.origin = b['origin']
                     bid.destination = destination
@@ -173,14 +173,14 @@ def request_destination(destination, start_dt, check_time=True):
                     bid.rating = get_bid_rating(bid, i, score)
 
                     bid.to_expose = 0 #True if i==0 else False
-                    pass#print(bid.found_at)
+                    print(bid.found_at)
 
                     db.session.add(bid)
                     db.session.commit()
 
                     i+=1
         except:
-            pass#print ('EXCEPTION')
+            print ('EXCEPTION')
             pass
 
     new_bid_count = stat.total_bid_count+sum_bids
