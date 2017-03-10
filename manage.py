@@ -48,22 +48,22 @@ def preload():
         #random_request( destinations)
         destination = destinations[randint(0, len(destinations)-1)]
 
-        #print()
-        #print('THIS')
+        print()
+        print('THIS')
         request_destination(destination, this_month_start)
-        #print ('SLEEPING', DELAY)
+        print ('SLEEPING', DELAY)
         sleep(DELAY)
 
-        #print()
-        #print('NEXT')
+        print()
+        print('NEXT')
         request_destination(destination, next_month_start, False)
-        #print ('SLEEPING', DELAY)
+        print ('SLEEPING', DELAY)
         sleep(DELAY)
 
-        #print()
-        #print('AFTER')
+        print()
+        print('AFTER')
         request_destination(destination, after_next_month_start, False)
-        #print ('SLEEPING', DELAY)
+        print ('SLEEPING', DELAY)
         sleep(DELAY)
 
         # stat.requested_at = datetime.utcnow()
