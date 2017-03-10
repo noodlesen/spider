@@ -34,7 +34,7 @@ def tp_request(endpoint, p={}):
     try:
         response = requests.get(api_request, headers=headers)
     except requests.exceptions.ConnectionError:
-        print ("CONNECTION ERROR")
+        #print ("CONNECTION ERROR")
         return {"data": [], "params": params}
 
     return {"data": json.loads(response.text)['data'], "params": params}
