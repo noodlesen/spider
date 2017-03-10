@@ -42,28 +42,28 @@ def preload():
     while n<200:
 
         if (datetime.now()-start_time).seconds>3000:
-            print ("reached time limit")
+            pass#print ("reached time limit")
             break
 
         #random_request( destinations)
         destination = destinations[randint(0, len(destinations)-1)]
 
-        print()
-        print('THIS')
+        pass#print()
+        pass#print('THIS')
         request_destination(destination, this_month_start)
-        print ('SLEEPING', DELAY)
+        pass#print ('SLEEPING', DELAY)
         sleep(DELAY)
 
-        print()
-        print('NEXT')
+        pass#print()
+        pass#print('NEXT')
         request_destination(destination, next_month_start, False)
-        print ('SLEEPING', DELAY)
+        pass#print ('SLEEPING', DELAY)
         sleep(DELAY)
 
-        print()
-        print('AFTER')
+        pass#print()
+        pass#print('AFTER')
         request_destination(destination, after_next_month_start, False)
-        print ('SLEEPING', DELAY)
+        pass#print ('SLEEPING', DELAY)
         sleep(DELAY)
 
         # stat.requested_at = datetime.utcnow()
@@ -76,7 +76,7 @@ def preload():
 @manager.command
 def scheduled():
     msg = "scheduled. ran at "+datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S%z')
-    print(msg)
+    pass#print(msg)
     #Log.register(data=msg)
 
 
