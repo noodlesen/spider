@@ -48,9 +48,10 @@ def expose(total_lim, each_lim ):
         elif b[2] in dests and dests[b[2]]<each_lim and len(selected)< total_lim:
             dests[b[2]]+=1
             selected.append(str(b[0]))
-    ss = ', '.join(selected)
-    db.engine.execute("""UPDATE bid SET to_expose=1 WHERE id IN (%s)""" % ss)
-    db.engine.execute("""UPDATE bid SET to_expose=0 WHERE id NOT IN (%s)""" % ss)
+    if len(selected)>0:
+        ss = ', '.join(selected)
+        db.engine.execute("""UPDATE bid SET to_expose=1 WHERE id IN (%s)""" % ss)
+        db.engine.execute("""UPDATE bid SET to_expose=0 WHERE id NOT IN (%s)""" % ss)
 
 #=======================
 def request_destination(destination, start_dt, check_time=True):
