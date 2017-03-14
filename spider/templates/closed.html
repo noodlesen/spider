@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Выгодные предложения для спонтанных путешественников! - Fly From Moscow{% endblock %}
+
+{% block styles %}
+{{ super() }}
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/common.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/main.css') }}">
+    <style type="text/css">
+        p{
+          text-align:center; font-size:120%;
+          display: block;
+          margin:auto;
+          width: 70%;
+        }
+        h2{
+            font-size: 180%;
+        }
+    </style>
+{% endblock %}
+
+{% block page_content %}
+<div class="container">
+    <div class="row">
+
+        <div class="col-lg-10 col-lg-offset-1">
+            <img id="logo" src="{{url_for('static', filename='images/fly2.svg')}}" />
+            <span class="logo-text">FROM <span style="color:red; font-size:.75em;" class="glyphicon glyphicon-star"></span> MOSCOW</span>
+
+            <h1>Мы закрылись :(</h1>
+            <p>К сожалению, по ряду причин мы вынуждены были прекратить работу.<br/>Спасибо за ваш интерес к этому проекту.</p>
+            <div class="divider"></div>
+
+            <h2>Но мы не перестаём работать в этом направлении, потому что хотим создать самое лучшее в мире решение для поиска классных авиабилетов! Лучшее для вас!</h2>
+
+            <p>Поэтому нам важно понимать, как вы ищете билеты, с какими трудностями сталкиваетесь, каких функций вам не хватает.</p>
+            <p>Пройдите маленький тест, это не займёт больше двух минут, и станьте первыми, кто узнает о запуске решения, разработанного специально&nbsp;для&nbsp;вас!</p>
+
+            <div class="divider"></div>
+
+            <a href="www.google.com" class="btn btn-large btn-success" style="font-size:200%; display:block; margin: auto;
+            width: 80%;">Пройти тест</a>
+
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+        <script src ="{{ url_for('static', filename="js/main.js") }}"
+            type="text/javascript"></script>
+{% endblock %}

@@ -102,7 +102,7 @@ def robots():
 @app.route('/')
 def root():
     Log.register(action='route:root')
-    return render_template('main.html')
+    return render_template('closed.html')
 
 @app.route('/bid-feed', methods = ['POST'])
 def bid_feed():

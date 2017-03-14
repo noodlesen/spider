@@ -41,7 +41,7 @@ def load():
     n=0
     while n<200:
 
-        if (datetime.now()-start_time).seconds>3000:
+        if (datetime.now()-start_time).seconds>2000:
             print ("reached time limit")
             break
 
